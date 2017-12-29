@@ -18,6 +18,7 @@ var lookupData = {
 };
 
 function execBTO(path){
+    console.log('bto_advanced_USBIR_cmd '+path);
     exec('/usr/local/bin/bto_advanced_USBIR_cmd -d `cat '+__dirname+'/'+path+'`',
         function (error, stdout, stderr) {
             if(stdout){
@@ -32,22 +33,19 @@ function execBTO(path){
     });
 }
 
-function processAction(res, target, cmd){
+function processAction(target, cmd){
     Object.keys(lookupData).forEach(function(target_){
-        if( lookupData[target_].findIndex(target) === -1 ){
+        if( lookupData[target_].indexOf(target) === -1 ){
             return;
         }
-        var path = target+'/'+cmd;
-        console.log(path);
-        fs.access(__dirname+'/'+path, fs.constants.R_OK, function(error){
+        var path = 'data/'+target_+'/'+cmd;
+        fs.access(__dirname+'/'+path, (fs.constants || fs).R_OK, function(error){
             if (error) {
                 if (error.code === "ENOENT") {
-                    res.json({status:'NG'});
-                } else {
-                    execBTO(path);
-                    res.json({status:'OK'});
+                    console.log('ENOENT error '+__dirname+'/'+path);
                 }
             }
+            execBTO(path);
         });
     });
 }
@@ -57,5 +55,7 @@ app.post("/api/action", function(req, res, next){
         res.json({status:'NG'});
         return;
     }
-    processAction(res,req.body.target, res.body.cmd)
+    console.log(req.body);
+    processAction(req.body.target.trim(), req.body.cmd);
+    res.json({status:'OK'});
 });
