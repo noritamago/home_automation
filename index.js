@@ -11,7 +11,7 @@ var server = app.listen(3000, function(){
     console.log("Node.js is listening to PORT:" + server.address().port);
 });
 
-var lookupData = {
+var targetNameMap = {
     'light' : ['電気','ライト','明かり'],
     'tv' : ['TV','テレビ'],
     'aircon' : ['エアコン','暖房','冷房']
@@ -34,8 +34,8 @@ function execBTO(path){
 }
 
 function processAction(target, cmd){
-    Object.keys(lookupData).forEach(function(target_){
-        if( lookupData[target_].indexOf(target) === -1 ){
+    Object.keys(targetNameMap).forEach(function(target_){
+        if( targetNameMap[target_].indexOf(target) === -1 ){
             return;
         }
         var path = 'data/'+target_+'/'+cmd;
