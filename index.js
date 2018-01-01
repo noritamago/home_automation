@@ -51,7 +51,11 @@ function processAction(target, cmd){
 }
 
 app.post("/api/action", function(req, res, next){
-    if( req.body.location && req.body.location !== 'living' ) {
+    if( !req.body.location || !req.body.target || !req.body.cmd ) {
+        res.json({status:'NG'});
+        return;
+    }
+    if( req.body.location !== 'living' ) {
         res.json({status:'NG'});
         return;
     }
