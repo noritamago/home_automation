@@ -35,7 +35,7 @@ function execBTO(path){
 
 function processAction(target, cmd){
     Object.keys(targetNameMap).forEach(function(target_){
-        if( targetNameMap[target_].indexOf(target) === -1 ){
+        if( targetNameMap[target_].indexOf(target) === -1 && target_ !== target){
             return;
         }
         var path = 'data/'+target_+'/'+cmd;
